@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[예시] 원본 vs v2.0 vs v2.0+PE 3단 비교 | 페로브스카이트 박막 공정</title>
+<style>
+:root {
+  --bg:#f0f3f8; --card:#fff; --border:#d4dae6; --text:#1a2535;
+  --c-orig:#1a3a5c; --c-v20:#1a7040; --c-pe:#7b1fa2;
+  --h-orig:#1a3a5c; --h-v20:#1a7040; --h-pe:#6a1b9a;
+  --del-bg:#fde8e8; --del-text:#8b1a1a;
+  --ins-bg:#dff5e8; --ins-text:#145c2f;
+  --pe-bg:#f3e5f5; --pe-text:#4a148c;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Apple SD Gothic Neo','Noto Sans KR','Segoe UI',sans-serif; background:var(--bg); color:var(--text); font-size:13.5px; line-height:1.75; }
+.page { max-width:1600px; margin:0 auto; padding:22px 14px 56px; }
+
+/* 헤더 */
+.rpt-header { background:linear-gradient(135deg,#1b2d4f,#4a148c); color:#fff; border-radius:12px; padding:26px 34px 20px; margin-bottom:18px; }
+.rpt-header h1 { font-size:1.4rem; font-weight:800; margin-bottom:4px; }
+.rpt-header p { font-size:.85rem; opacity:.78; }
+
+.notice { background:#fff8e1; border:2px dashed #f59e0b; border-radius:8px; padding:9px 15px; margin-bottom:16px; font-size:.82rem; color:#78350f; }
+
+/* 컬럼 레이블 */
+.col-labels { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:10px; }
+.col-label { border-radius:7px; padding:8px 14px; font-size:.84rem; font-weight:700; color:#fff; text-align:center; }
+.col-label.orig { background:var(--h-orig); }
+.col-label.v20  { background:var(--h-v20); }
+.col-label.pe   { background:var(--h-pe); }
+
+/* 비교 블록 */
+.compare-block { margin-bottom:16px; }
+.compare-block-header { background:#2d3f5a; color:#fff; border-radius:8px 8px 0 0; padding:9px 16px; font-size:.86rem; font-weight:700; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; border:1px solid var(--border); border-top:none; border-radius:0 0 8px 8px; overflow:hidden; }
+.col { padding:14px 16px; background:var(--card); }
+.col:nth-child(2) { border-left:1px solid var(--border); border-right:1px solid var(--border); }
+.col p { font-size:.87rem; margin-bottom:7px; }
+.col ul { padding-left:1.3em; margin:5px 0; }
+.col ul li { font-size:.86rem; margin-bottom:3px; }
+.col.orig-col { background:#fafbff; }
+.col.v20-col  { background:#f7fdf9; }
+.col.pe-col   { background:#fdf7ff; }
+
+/* 마크업 */
+del { background:var(--del-bg); color:var(--del-text); text-decoration:line-through; border-radius:2px; padding:0 2px; }
+ins { background:var(--ins-bg); color:var(--ins-text); text-decoration:none; border-radius:2px; padding:0 2px; font-style:normal; }
+.pe-mark { background:var(--pe-bg); color:var(--pe-text); border-radius:2px; padding:0 2px; font-weight:600; }
+
+/* 태그 */
+.rule-tag { display:inline-block; background:#eef2fb; color:#1e4d8c; border:1px solid #c5d2ee; border-radius:3px; padding:0 5px; font-size:.71rem; font-weight:700; margin:0 2px; }
+.pe-tag { background:#f3e5f5; color:#6a1b9a; border-color:#d1a8e8; }
+
+/* 테이블 */
+table { width:100%; border-collapse:collapse; font-size:.84rem; margin:8px 0; }
+th { padding:7px 10px; text-align:left; font-size:.8rem; }
+td { padding:6px 10px; border-bottom:1px solid var(--border); vertical-align:top; font-size:.84rem; }
+.th-orig { background:var(--h-orig); color:#fff; }
+.th-v20  { background:var(--h-v20); color:#fff; }
+.th-pe   { background:var(--h-pe); color:#fff; }
+
+/* 통계 */
+.stats-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; border-top:1px solid var(--border); background:#f8f9fc; border-radius:0 0 8px 8px; font-size:.79rem; }
+.stat-cell { padding:6px 14px; color:#5d6f8a; }
+.stat-cell:nth-child(2) { border-left:1px solid var(--border); border-right:1px solid var(--border); }
+.stat-red { color:#c62828; font-weight:600; }
+.stat-grn { color:#1a7040; font-weight:600; }
+.stat-pur { color:#6a1b9a; font-weight:600; }
+
+/* 범례 */
+.legend { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:16px; font-size:.81rem; align-items:center; }
+.leg { display:flex; align-items:center; gap:5px; }
+
+/* 요약 */
+.summary { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 22px; margin-top:18px; }
+.summary h2 { font-size:.95rem; font-weight:700; color:#2d3f5a; margin-bottom:12px; }
+
+@media(max-width:900px){
+  .three-col, .col-labels, .stats-row { grid-template-columns:1fr; }
+  .col:nth-child(2) { border-left:none; border-right:none; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .stat-cell:nth-child(2) { border-left:none; border-right:none; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="notice">
+  ⚠️ <strong>[예시 파일]</strong> im-not-ai v2.0 + PE 변환 규칙을 시연하기 위한 <strong>가상 시나리오</strong>입니다. 실제 제품·회사·수치와 무관합니다.
+</div>
+
+<div class="rpt-header">
+  <h1>원본 vs v2.0 윤문 vs v2.0+PE — 3단 비교 보고서</h1>
+  <p>가상 시나리오: 페로브스카이트 박막 스핀코팅 균일도 개선 개발계획 · 3가지 버전 나란히 비교</p>
+</div>
+
+<div class="legend">
+  <div class="leg"><del>삭제·교체</del> 원본에서 제거</div>
+  <div class="leg"><ins>추가·수정</ins> v2.0에서 변경</div>
+  <div class="leg"><span class="pe-mark">PE 변환</span> v2.0+PE 추가 압축</div>
+  <div class="leg"><span class="rule-tag">C-5</span> 규칙 태그</div>
+  <div class="leg"><span class="rule-tag pe-tag">PE-1</span> PE 규칙 태그</div>
+</div>
+
+<div class="col-labels">
+  <div class="col-label orig">① 원본 AI 초안</div>
+  <div class="col-label v20">② v2.0 윤문 후</div>
+  <div class="col-label pe">③ v2.0 + PE 후</div>
+</div>
+
+<!-- 비교 1: 헤더 이모지 -->
+<div class="compare-block">
+  <div class="compare-block-header">① 헤더 이모지 및 날짜 표기 <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">C-5</span></div>
+  <div class="three-col">
+    <div class="col orig-col">
+      <p><del>📅</del> 작성일: 2026-00-00 | <del>🏭</del> 담당: 공정팀 | <del>🔖</del> 버전: Rev. 1.0 <span class="rule-tag">C-5</span></p>
+    </div>
+    <div class="col v20-col">
+      <p><ins>작성일: 2026-00-00 | 담당: 공정팀 | 버전: Rev. 1.0</ins></p>
+    </div>
+    <div class="col pe-col">
+      <p>작성일: 2026-00-00 | 담당: 공정팀 | 버전: Rev. 1.0</p>
+      <p style="font-size:.79rem;color:#6a1b9a">※ PE-1: 헤더 변경 없음 (이미 최소)</p>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-cell"><span class="stat-red">이모지 3건 삭제</span></div>
+    <div class="stat-cell"><span class="stat-grn">텍스트만 유지</span></div>
+    <div class="stat-cell"><span class="stat-pur">추가 변경 없음</span></div>
+  </div>
+</div>
+
+<!-- 비교 2: 배경 절 -->
+<div class="compare-block">
+  <div class="compare-block-header">② 배경 절 — 피벗어·번역투·명사 종결 <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">D-1</span> <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">번역투</span> <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">PE-1</span></div>
+  <div class="three-col">
+    <div class="col orig-col">
+      <p><del>⭐ 결론적으로,</del> <span class="rule-tag">C-5</span><span class="rule-tag">D-1</span> 본 절에서는 PSC-A 모듈에 적용 가능한 박막 코팅 방식을 분류하고 각 방식의 특성을 비교하는 것이 중요합니다<del>,</del> <span class="rule-tag">C-11</span> 이 분류 작업을 통해 스핀코팅 방식이 왜 선택되었는지를 이해하는 것이 가능합니다.</p>
+      <p>현재 흡수층 코팅에 스핀코팅 방식이 채택되어 있으며, <del>본 케이스</del>에서 검토 대상이 되는 것도 이 공정입니다. <span class="rule-tag">번역투</span></p>
+    </div>
+    <div class="col v20-col">
+      <p><ins>이 절에서는</ins> PSC-A 모듈 박막 코팅 방식을 분류하고 특성을 비교합니다. 스핀코팅 방식의 선택 근거를 확인합니다.</p>
+      <p>현재 흡수층 코팅에 스핀코팅 방식이 채택되어 있으며, <ins>이 사례</ins>에서 검토 대상도 이 공정입니다.</p>
+    </div>
+    <div class="col pe-col">
+      <p><span class="pe-mark">PSC-A 모듈에 스핀코팅 채택. 이 사례의 검토 대상.</span> <span class="rule-tag pe-tag">PE-1</span></p>
+      <p style="font-size:.79rem;color:#6a1b9a">※ PE-1: 엔지니어가 이미 아는 설명 → 1줄 요약</p>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-cell"><span class="stat-red">삭제 4건</span> 피벗·이모지·쉼표</div>
+    <div class="stat-cell"><span class="stat-grn">수정 2건</span> 번역투·서술어</div>
+    <div class="stat-cell"><span class="stat-pur">2문장 → 1줄 (PE-1)</span></div>
+  </div>
+</div>
+
+<!-- 비교 3: 문제 정의 -->
+<div class="compare-block">
+  <div class="compare-block-header">③ 핵심 문제 정의 — 이모지·명사 종결 <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">C-5</span> <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">서술어</span></div>
+  <div class="three-col">
+    <div class="col orig-col">
+      <p><del>🔴</del> <span class="rule-tag">C-5</span> <strong>핵심 문제:</strong> PSC-A 모듈 스핀코팅 시 동일 레시피 적용에도 로트 간 PCE 편차가 ±1.5%p 이상 <del>발생함</del>. <span class="rule-tag">서술어</span> 소면적 셀에서는 해당 편차가 <del>관측되지 않음</del>. <span class="rule-tag">서술어</span></p>
+    </div>
+    <div class="col v20-col">
+      <p><strong>핵심 문제:</strong> PSC-A 모듈 스핀코팅 시 동일 레시피 적용에도 로트 간 PCE 편차가 ±1.5%p 이상 <ins>발생합니다</ins>. 소면적 셀에서는 <ins>관측되지 않습니다</ins>.</p>
+    </div>
+    <div class="col pe-col">
+      <p><strong>핵심 문제:</strong> <span class="pe-mark">PSC-A 모듈 로트 간 PCE ±1.5%p 편차. 소면적 셀에서는 미발생 → 모듈 스케일 공정 인자 문제.</span> <span class="rule-tag pe-tag">PE-2</span></p>
+      <p style="font-size:.79rem;color:#6a1b9a">※ PE-2: 설명문 → 1줄 핵심 요약</p>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-cell"><span class="stat-red">삭제 1건</span> 이모지</div>
+    <div class="stat-cell"><span class="stat-grn">수정 2건</span> 명사 종결 → 합쇼체</div>
+    <div class="stat-cell"><span class="stat-pur">2문장 → 1줄 (PE-2)</span></div>
+  </div>
+</div>
+
+<!-- 비교 4: 가설 비교 -->
+<div class="compare-block">
+  <div class="compare-block-header">④ 가설 3개 — 피벗어·추정표현 → v2.0 윤문 → PE 비교표 <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">D-1</span> <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">A-15</span> <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">PE-3</span></div>
+  <div class="three-col">
+    <div class="col orig-col">
+      <p><strong>H1.</strong> <del>🔴 이 가설은 매우 중요한 것입니다.</del> <span class="rule-tag">C-5</span><span class="rule-tag">D-1</span> 농도나 점도가 변화하면 박막 두께가 달라지기 때문에<del>,</del> <span class="rule-tag">C-11</span> 원인일 <del>가능성이 높다는 것을 유의해야 합니다</del>. <span class="rule-tag">A-15</span> <del>결론적으로,</del> <span class="rule-tag">D-1</span> 먼저 검증하는 것이 합리적이라고 볼 수 있습니다.</p>
+      <p><strong>H2.</strong> 기류 불균일 시 증발 속도 편차 발생. <del>이는</del> <span class="rule-tag">A-16</span> 결정화에 영향을 미치고 결함 밀도가 높아질 <del>것으로 추정됩니다</del>. <span class="rule-tag">A-15</span></p>
+      <p><strong>H3.</strong> 핫플레이트 센서 드리프트로 어닐링 온도 저하. Voc 저하 <del>가능성이 있습니다</del>. <span class="rule-tag">A-15</span></p>
+    </div>
+    <div class="col v20-col">
+      <p><strong>H1.</strong> 농도·점도 변화 시 박막 두께와 결정화 거동이 달라집니다. 원인일 <ins>가능성이 높습니다</ins>. <ins>우선 검증합니다</ins>.</p>
+      <p><strong>H2.</strong> 기류 불균일 시 증발 속도 편차 발생. <ins>기류 불균일은</ins> 결정화에 영향을 미치며 결함 밀도가 <ins>높아집니다</ins>.</p>
+      <p><strong>H3.</strong> 핫플레이트 센서 드리프트로 어닐링 온도 저하. Voc <ins>저하로 이어집니다</ins>.</p>
+    </div>
+    <div class="col pe-col">
+      <span class="rule-tag pe-tag">PE-3</span> H1~H3 개별 서술 → 가설 비교표
+      <table style="margin-top:8px">
+        <thead>
+          <tr>
+            <th class="th-pe">가설</th>
+            <th class="th-pe">핵심 근거</th>
+            <th class="th-pe">예측 경로</th>
+            <th class="th-pe">우선순위</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>H1</strong> 농도 변화</td><td>글로브박스 습도 완화</td><td>두께↓→Jsc↓→PCE↓</td><td>P0</td></tr>
+          <tr><td><strong>H2</strong> 기류 불균일</td><td>엣지 열화 방향 집중</td><td>과건조→결함↑</td><td>P0</td></tr>
+          <tr><td><strong>H3</strong> 온도 편차</td><td>캘리브레이션 6개월 경과</td><td>결정성↓→Voc↓</td><td>P1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-cell"><span class="stat-red">삭제 9건</span> 피벗·이모지·추정·쉼표</div>
+    <div class="stat-cell"><span class="stat-grn">수정 5건</span> 추정→단언, 대명사 교정</div>
+    <div class="stat-cell"><span class="stat-pur">3소절 → 비교표 1개 (PE-3)</span></div>
+  </div>
+</div>
+
+<!-- 비교 5: 진단 계획 -->
+<div class="compare-block">
+  <div class="compare-block-header">⑤ 진단 계획 — 피벗어·명사 종결 → PE 명령형 불릿 <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">D-1</span> <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">PE-2</span> <span class="rule-tag" style="background:#fff2;border-color:#fff4;color:#fff">PE-4</span></div>
+  <div class="three-col">
+    <div class="col orig-col">
+      <p><del>⭐ 결론적으로,</del> <span class="rule-tag">C-5</span><span class="rule-tag">D-1</span> 이번에 계획된 진단 방법들은 각 가설을 체계적으로 검증하는 데 있어서 매우 효과적이고 적합한 방법들이라고 <del>판단됩니다</del>. <span class="rule-tag">서술어</span> <del>따라서,</del> <span class="rule-tag">D-1</span> 이 계획을 충실히 이행하는 것이 문제 해결에 기여할 것이라고 볼 수 있습니다.</p>
+      <p>W+2 시점에 각 진단 결과를 종합하여 주원인을 확정합니다. 주원인 미확정 시 H1+H2 복합 가설로 전환하며, 대응책은 그 이후에 결정됩니다.</p>
+    </div>
+    <div class="col v20-col">
+      <p>각 가설을 체계적으로 검증합니다.</p>
+      <p>W+2 시점에 진단 결과를 종합해 주원인을 확정합니다. 미확정 시 H1+H2 복합 가설로 전환합니다.</p>
+    </div>
+    <div class="col pe-col">
+      <ul style="padding-left:1.3em;margin:4px 0">
+        <li><span class="pe-mark">H3 캘리브레이션 W+0 실시 (공정팀)</span> <span class="rule-tag pe-tag">PE-4</span></li>
+        <li><span class="pe-mark">H1 농도·점도 측정 W+1 (소재팀)</span></li>
+        <li><span class="pe-mark">H2 챔버 맵핑 W+1 (설비팀)</span></li>
+        <li><span class="pe-mark">W+2 주원인 확정 → 개선 레시피 수립</span></li>
+      </ul>
+      <p style="font-size:.79rem;color:#6a1b9a;margin-top:6px">※ PE-2·4: 설명문 제거, 명령형 불릿으로 전환</p>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-cell"><span class="stat-red">삭제 4건</span> 피벗·이모지·설명 2문장</div>
+    <div class="stat-cell"><span class="stat-grn">수정 1건</span> 서술어 완성</div>
+    <div class="stat-cell"><span class="stat-pur">산문 → 명령형 불릿 4줄 (PE-2·4)</span></div>
+  </div>
+</div>
+
+<!-- 전체 통계 요약 -->
+<div class="summary">
+  <h2>전체 변환 통계</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="background:#2d3f5a;color:#fff">항목</th>
+        <th class="th-orig">원본 → v2.0</th>
+        <th class="th-v20">v2.0 → v2.0+PE</th>
+        <th class="th-pe">누적 효과</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>이모지</td><td>8건 제거</td><td>—</td><td>0건 (전량 제거)</td></tr>
+      <tr><td>피벗어 (결론적으로 등)</td><td>5건 제거</td><td>—</td><td>0건</td></tr>
+      <tr><td>불필요 쉼표</td><td>6건 제거</td><td>—</td><td>0건</td></tr>
+      <tr><td>번역투 (본 케이스 등)</td><td>2건 교정</td><td>—</td><td>0건</td></tr>
+      <tr><td>명사 종결 (-임./-됨.)</td><td>4건 → 합쇼체</td><td>—</td><td>0건</td></tr>
+      <tr><td>추정 표현 (A-15)</td><td>3건 → 단언</td><td>—</td><td>0건</td></tr>
+      <tr><td>모호한 대명사 (A-16)</td><td>1건 → 구체명사</td><td>—</td><td>0건</td></tr>
+      <tr><td>배경 설명 압축 (PE-1)</td><td>—</td><td>2문장 → 1줄</td><td>↓60%</td></tr>
+      <tr><td>가설 소절 → 비교표 (PE-3)</td><td>—</td><td>3소절 → 표 1개</td><td>↓45%</td></tr>
+      <tr><td>설명문 → 명령형 불릿 (PE-2·4)</td><td>—</td><td>산문 → 불릿 4줄</td><td>↓50%</td></tr>
+      <tr style="font-weight:700;background:#f8f9fc"><td>전체 분량</td><td>~10% 감소</td><td>추가 ~45% 감소</td><td><strong>원본 대비 ~55% 압축</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</body>
+</html>

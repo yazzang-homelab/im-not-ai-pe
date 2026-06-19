@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[예시] 페로브스카이트 박막 공정 개선 — v2.0 + PE 버전</title>
+<style>
+:root { --primary:#1a3a5c; --bg:#f5f7fa; --card:#fff; --border:#dde3ea; --text:#1c2b3a; --muted:#5a6a7a; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Segoe UI','Apple SD Gothic Neo',sans-serif; background:var(--bg); color:var(--text); line-height:1.65; font-size:.93rem; }
+.page { max-width:1040px; margin:0 auto; padding:26px 18px 52px; }
+.header { background:linear-gradient(135deg,#1a3a5c,#2563a8); color:#fff; border-radius:10px; padding:26px 34px 20px; margin-bottom:18px; }
+.header h1 { font-size:1.6rem; font-weight:800; margin-bottom:5px; }
+.header p { font-size:.9rem; opacity:.82; }
+.pe-badge { display:inline-block; background:#e65100; border-radius:4px; padding:2px 10px; font-size:.76rem; font-weight:700; margin-left:8px; }
+.notice { background:#fff3e0; border:2px solid #e65100; border-radius:8px; padding:10px 16px; margin-bottom:18px; font-size:.84rem; color:#7c3a00; }
+.section { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:20px 26px; margin-bottom:16px; }
+.sec-title { font-size:1rem; font-weight:700; color:var(--primary); border-left:4px solid var(--primary); padding-left:9px; margin-bottom:14px; }
+.sub { font-size:.91rem; font-weight:700; color:var(--primary); margin:16px 0 7px; }
+p { font-size:.91rem; margin-bottom:8px; }
+table { width:100%; border-collapse:collapse; font-size:.86rem; margin:10px 0; }
+th { background:var(--primary); color:#fff; padding:8px 11px; text-align:left; }
+td { padding:7px 11px; border-bottom:1px solid var(--border); vertical-align:top; }
+tr:last-child td { border-bottom:none; }
+.tag { display:inline-block; border-radius:4px; padding:1px 7px; font-size:.77rem; font-weight:600; }
+.p0 { background:#ffebee; color:#c62828; } .p1 { background:#fff3e0; color:#e65100; }
+.p2 { background:#e8f5e9; color:#2e7d32; }
+ul.eng { padding-left:1.3em; margin:5px 0; }
+ul.eng li { margin-bottom:3px; font-size:.9rem; }
+ul.eng li::marker { content:"▶ "; color:var(--primary); font-size:.75em; }
+.callout { border-radius:7px; padding:10px 15px; margin:10px 0; display:flex; gap:9px; align-items:flex-start; font-size:.9rem; }
+.callout.red { background:#ffebee; border-left:4px solid #c62828; }
+.callout.yellow { background:#fff8e1; border-left:4px solid #f57f17; }
+.callout.green { background:#e8f5e9; border-left:4px solid #2e7d32; }
+.callout p { margin:0; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px; }
+.mini-card { background:var(--bg); border:1px solid var(--border); border-radius:7px; padding:14px 16px; }
+.mini-card .mc-title { font-size:.82rem; font-weight:700; color:var(--primary); margin-bottom:7px; }
+.mini-card p { font-size:.84rem; margin-bottom:4px; }
+@media(max-width:640px){ .two-col { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="notice">
+  <strong>[예시 파일]</strong> im-not-ai v2.0 + PE 변환 규칙을 시연하기 위한 <strong>가상 시나리오</strong>입니다.
+  실제 제품·회사·수치와 무관합니다.
+</div>
+
+<div class="header">
+  <p style="font-size:.76rem;opacity:.6;margin-bottom:6px">개발계획 · SAMPLE · Rev 1.0 <span class="pe-badge">v2.0 + PE 버전</span></p>
+  <h1>페로브스카이트 박막 스핀코팅 균일도 개선</h1>
+  <p>PSC-A 소형 모듈 | PCE 편차 ±1.5%p → 원인 확정 후 ±0.5%p 이하 목표</p>
+</div>
+
+<div class="section">
+  <div class="sec-title">1. 현황 요약</div>
+
+  <table>
+    <thead><tr><th>항목</th><th>기준 (소면적 셀)</th><th>현재 (PSC-A 모듈)</th><th>목표</th></tr></thead>
+    <tbody>
+      <tr><td>평균 PCE</td><td>18.2%</td><td>16.8% ± 1.5%p</td><td>17.5% ± 0.5%p</td></tr>
+      <tr><td>Voc</td><td>1.12 V</td><td>1.05~1.10 V</td><td>1.10 V 이상</td></tr>
+      <tr><td>박막 두께 균일도</td><td>±2%</td><td>±8%</td><td>±3% 이하</td></tr>
+      <tr><td>결정화 상태</td><td>양호</td><td>엣지부 열화</td><td>전면 균일</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout red">
+    <span>🔴</span>
+    <p><strong>핵심:</strong> 동일 레시피 적용에도 로트 간 PCE ±1.5%p 편차. 소면적 셀에서는 미발생 → 모듈 스케일 공정 인자 문제.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-title">2. 경시 이력</div>
+  <table>
+    <thead><tr><th>시기</th><th>평균 PCE</th><th>편차</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td>2025 Q3</td><td>17.8%</td><td>±0.4%p</td><td>기준 (안정)</td></tr>
+      <tr><td>2025 Q4</td><td>17.1%</td><td>±0.9%p</td><td>글로브박스 습도 조건 변경</td></tr>
+      <tr><td>2026 Q1</td><td>16.8%</td><td>±1.5%p</td><td>편차 확대, 엣지 열화 관측</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="sec-title">3. 가설 비교</div>
+  <table>
+    <thead><tr><th>가설</th><th>설명</th><th>핵심 근거</th><th>예측 경로</th><th>우선순위</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>H1</strong><br>전구체 농도 변화</td>
+        <td>용매 흡습으로 농도 희석</td>
+        <td>Q4 글로브박스 습도 제어 완화</td>
+        <td>농도↓ → 박막 두께↓ → Jsc↓ → PCE↓</td>
+        <td><span class="tag p0">P0</span></td>
+      </tr>
+      <tr>
+        <td><strong>H2</strong><br>챔버 기류 불균일</td>
+        <td>N₂ 퍼지 편심으로 증발 속도 편차</td>
+        <td>엣지 열화가 특정 방향 집중</td>
+        <td>기류 불균일 → 엣지 과건조 → 결함 밀도↑</td>
+        <td><span class="tag p0">P0</span></td>
+      </tr>
+      <tr>
+        <td><strong>H3</strong><br>어닐링 온도 편차</td>
+        <td>핫플레이트 센서 드리프트</td>
+        <td>캘리브레이션 6개월 미실시</td>
+        <td>온도↓ → 결정성 불충분 → Voc↓</td>
+        <td><span class="tag p1">P1</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:.83rem;color:#5a6a7a;margin-top:6px">* H1·H2 동시 발생 가능 — W+2 진단 후 복합 여부 판단</p>
+</div>
+
+<div class="section">
+  <div class="sec-title">4. 진단 계획 및 Decision Gate</div>
+
+  <table>
+    <thead><tr><th>가설</th><th>진단 방법</th><th>담당</th><th>일정</th><th>Pass 기준</th></tr></thead>
+    <tbody>
+      <tr><td>H3 (선행)</td><td>핫플레이트 실측 캘리브레이션</td><td>공정팀</td><td>W+0</td><td>설정값 ±3°C 이내</td></tr>
+      <tr><td>H1</td><td>GC-MS 농도 분석 + 점도 측정</td><td>소재팀</td><td>W+1</td><td>농도 편차 ±2% 이내</td></tr>
+      <tr><td>H2</td><td>챔버 온도·기류 맵핑 (열화상)</td><td>설비팀</td><td>W+1</td><td>챔버 내 온도 균일도 ±1°C</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout yellow" style="margin-top:12px">
+    <span>⚠️</span>
+    <p><strong>W+2 Decision Gate:</strong> 주원인 확정 → 개선 레시피 수립. 미확정 시 H1+H2 복합 대응으로 전환.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="sec-title">5. 과제 목록</div>
+  <table>
+    <thead><tr><th>#</th><th>과제</th><th>담당</th><th>완료 기준</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>핫플레이트 캘리브레이션 실시</td><td>공정팀</td><td>W+0, 성적서 발행</td></tr>
+      <tr><td>2</td><td>전구체 농도·점도 전수 측정</td><td>소재팀</td><td>W+1, 관리 규격 수립</td></tr>
+      <tr><td>3</td><td>챔버 기류 맵핑 및 노즐 정렬 점검</td><td>설비팀</td><td>W+1, 열화상 보고서</td></tr>
+      <tr><td>4</td><td>W+2 주원인 확정 회의</td><td>팀장</td><td>W+2, 의사결정 완료</td></tr>
+      <tr><td>5</td><td>개선 레시피 적용 검증 (n=5 로트)</td><td>공정팀</td><td>W+4, PCE ±0.5%p 달성</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="sec-title">6. 실험 계획</div>
+  <div class="two-col">
+    <div class="mini-card">
+      <div class="mc-title">H1 검증 — 전구체 농도 관리</div>
+      <ul class="eng">
+        <li>동일 배치에서 3회 농도 측정 (시작·중간·종료)</li>
+        <li>글로브박스 내 습도 1%RH 미만으로 복원</li>
+        <li>편차 발생 시 용매 재증류 후 재제조</li>
+      </ul>
+    </div>
+    <div class="mini-card">
+      <div class="mc-title">H2 검증 — 챔버 환경 개선</div>
+      <ul class="eng">
+        <li>N₂ 퍼지 노즐 동심도 측정 및 재정렬</li>
+        <li>챔버 온도 9점 맵핑 (열화상 카메라)</li>
+        <li>엣지부 국소 기류 차단 배플 시험 적용</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
